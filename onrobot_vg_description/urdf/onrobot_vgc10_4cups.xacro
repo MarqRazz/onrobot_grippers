@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="onrobot_vgc10_base_link" params="prefix">
-    <link name="${prefix}onrobot_vgc10_base_link">
+  <xacro:macro name="vgc10_base_link" params="prefix">
+    <link name="${prefix}vgc10_base_link">
       <inertial>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
         <mass value="0.6" />

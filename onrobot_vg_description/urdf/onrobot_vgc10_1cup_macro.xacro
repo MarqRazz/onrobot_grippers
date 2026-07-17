@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="onrobot_vgc10_1cup" params="prefix">
+    <link name="${prefix}vgc10_base_link">
+      <inertial>
+        <origin xyz="-0.000120003941 -8.77373103e-06 0.0529614225" rpy="0 0 0" />
+        <mass value="0.6" />
+        <inertia ixx="0.000848060615" ixy="-1.7375174e-09" ixz="-3.71810654e-10" iyy="0.000848143162" iyz="-1.83635579e-07" izz="0.000814249349" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://onrobot_vg_description/meshes/vgc10/visual/vgc10_base.obj" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://onrobot_vg_description/meshes/vgc10/collision/vgc10_base_hull.stl" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}suction">
+      <inertial>
+        <origin xyz="7.83527443e-06 -1.89000373e-07 -0.0269850715" rpy="0 0 0" />
+        <mass value="0.2" />
+        <inertia ixx="9.71289793e-05" ixy="2.63459768e-10" ixz="3.77767907e-10" iyy="9.7129443e-05" iyz="7.66580836e-10" izz="2.73260252e-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://onrobot_vg_description/meshes/vgc10/visual/single_cup_w_extension.obj" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://onrobot_vg_description/meshes/vgc10/collision/single_cup_w_extension_hull.stl" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}suction_joint" type="fixed">
+      <origin xyz="0 0 0.178" rpy="0 0 0" />
+      <parent link="${prefix}vgc10_base_link" />
+      <child link="${prefix}suction" />
+    </joint>
+  </xacro:macro>
+</robot>

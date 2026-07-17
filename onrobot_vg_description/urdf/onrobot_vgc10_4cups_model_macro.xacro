@@ -95,7 +95,7 @@
   <xacro:macro name="suction_joint" params="prefix">
     <joint name="${prefix}_suction_joint" type="fixed">
       <origin xyz="0. 0. 0.08350" rpy="0 0 0" />
-      <parent link="${prefix}onrobot_vgc10_base_link" />
+      <parent link="${prefix}vgc10_base_link" />
       <child link="${prefix}suction" />
       <axis xyz="1 0 0" />
     </joint>
@@ -128,7 +128,7 @@
   <xacro:include filename="$(find onrobot_vg_description)/urdf/onrobot_vgc10_4cups.xacro" />
 
   <xacro:macro name="onrobot_vgc10" params="prefix">
-    <xacro:onrobot_vgc10_base_link prefix="${prefix}"/>
+    <xacro:vgc10_base_link prefix="${prefix}"/>
     <xacro:finger_links prefix="${prefix}"/>
     <xacro:suction_joint prefix="${prefix}"/>
   </xacro:macro>

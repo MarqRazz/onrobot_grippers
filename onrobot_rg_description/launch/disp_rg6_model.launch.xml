@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="rviz_config"
+       default="$(find-pkg-share onrobot_rg_description)/rviz/rg6_visualize.rviz"/>
+
+  <let name="robot_description"
+       value="$(command 'xacro $(find-pkg-share onrobot_rg_description)/urdf/onrobot_rg6_model.xacro')"/>
+
+  <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="robot_description" value="$(var robot_description)" type="str"/>
+  </node>
+
+  <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui" name="joint_state_publisher_gui" output="screen"/>
+
+  <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(var rviz_config)" output="screen"/>
+</launch>
