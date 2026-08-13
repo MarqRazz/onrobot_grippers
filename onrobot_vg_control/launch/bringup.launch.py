@@ -33,10 +33,10 @@ def generate_launch_description():
         name='OnRobotVGStatusListener',
         output='screen',
         parameters=[{
-            'ip': LaunchConfiguration('ip'),
-            'port': LaunchConfiguration('port'),
-            'changer_addr': LaunchConfiguration('changer_addr'),
-            'dummy': LaunchConfiguration('dummy')
+            'onrobot.ip': LaunchConfiguration('ip'),
+            'onrobot.port': LaunchConfiguration('port'),
+            'onrobot.changer_addr': LaunchConfiguration('changer_addr'),
+            'onrobot.dummy': LaunchConfiguration('dummy')
         }]
     )
 
@@ -46,10 +46,10 @@ def generate_launch_description():
         name='OnRobotVGTcpNode',
         output='screen',
         parameters=[{
-            'ip': LaunchConfiguration('ip'),
-            'port': LaunchConfiguration('port'),
-            'changer_addr': LaunchConfiguration('changer_addr'),
-            'dummy': LaunchConfiguration('dummy')
+            'onrobot.ip': LaunchConfiguration('ip'),
+            'onrobot.port': LaunchConfiguration('port'),
+            'onrobot.changer_addr': LaunchConfiguration('changer_addr'),
+            'onrobot.dummy': LaunchConfiguration('dummy')
         }]
     )
 

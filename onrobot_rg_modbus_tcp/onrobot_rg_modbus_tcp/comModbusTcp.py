@@ -7,8 +7,8 @@ OnRobot Grippers using the Modbus/TCP protocol.
 import sys
 import rclpy
 import threading
-from pymodbus.client.sync import ModbusTcpClient
-#from pymodbus.client.sync import ModbusSerialClient
+from pymodbus.client import ModbusTcpClient
+#from pymodbus.client import ModbusSerialClient
 from pymodbus.register_read_message import ReadHoldingRegistersResponse
 import time
 
@@ -66,7 +66,7 @@ class communication:
         if message != []:
             with self.lock:
                 self.client.write_registers(
-                    address=0, values=message, unit=self.changer_addr)
+                    address=0, values=message, slave=self.changer_addr)
 
     def restartPowerCycle(self):
         """Restarts the power cycle of Compute Box
@@ -79,7 +79,7 @@ class communication:
         # Sending 2 to address 0x0 resets compute box (address 63) power cycle
         with self.lock:
                 self.client.write_registers(
-                    address=0, values=message, unit=restart_address)
+                    address=0, values=message, slave=restart_address)
 
     def getStatus(self):
         """Sends a request to read, wait for the response
@@ -96,12 +96,12 @@ class communication:
         # Get status from the device (address 258 ~ 275)
         with self.lock:
             response = self.client.read_holding_registers(
-                address=258, count=18, unit=self.changer_addr)
+                address=258, count=18, slave=self.changer_addr)
             retries = 50
             # To get around spuratic - object has no attribute 'registers'
             while not isinstance(response, ReadHoldingRegistersResponse):
                 response = self.client.read_holding_registers(
-                    address=258, count=18, unit=self.changer_addr)
+                    address=258, count=18, slave=self.changer_addr)
                 retries -= 1
                 time.sleep(0.01)
                 if retries <= 0: raise TypeError("Failed to get status after 50 tries") 

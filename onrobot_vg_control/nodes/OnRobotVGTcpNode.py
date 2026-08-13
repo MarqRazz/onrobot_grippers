@@ -15,8 +15,8 @@ class OnRobotVGTcp(Node):
 
         # Retrieve parameters
         ip = self.declare_parameter('onrobot.ip', '192.168.1.1').value
-        port = self.declare_parameter('onrobot.port', '502').value
-        changer_addr = self.declare_parameter('onrobot.changer_addr', '65').value
+        port = self.declare_parameter('onrobot.port', 502).value
+        changer_addr = self.declare_parameter('onrobot.changer_addr', 65).value
         dummy = self.declare_parameter('onrobot.dummy', False).value
 
         # Gripper is a VG gripper with a Modbus/TCP connection
