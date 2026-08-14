@@ -6,7 +6,7 @@ OnRobot Grippers using the Modbus/TCP protocol.
 
 import sys
 import threading
-from pymodbus.client.sync import ModbusTcpClient
+from pymodbus.client import ModbusTcpClient
 import rclpy
 from rclpy.node import Node
 
@@ -58,7 +58,7 @@ class Communication(Node):
                        message[2] + message[3]]
             with self.lock:
                 self.client.write_registers(
-                    address=0, values=command,unit=int(self.changer_addr))
+                    address=0, values=command, slave=int(self.changer_addr))
 
     def get_status(self):
         """Sends a request to read, wait for the response
@@ -73,7 +73,7 @@ class Communication(Node):
         # Get status from the device (address 258 ~ 259)
         with self.lock:
             response = self.client.read_holding_registers(
-                address=258, count=2, unit=int(self.changer_addr)).registers
+                address=258, count=2, slave=int(self.changer_addr)).registers
 
         # Output the result
         return response
