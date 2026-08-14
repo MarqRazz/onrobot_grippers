@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
+from rclpy.logging import LoggingSeverity
 from rclpy.node import Node
 from onrobot_vg_msgs.msg import OnRobotVGInput
 
@@ -17,7 +18,11 @@ class OnRobotVGStatusListener(Node):
 
     def print_status_callback(self, msg):
         """Callback function to handle the incoming OnRobotVGInput message."""
-        self.get_logger().info(self.status_interpreter(msg))
+        logger = self.get_logger()
+        # Skip building the string at all unless DEBUG is actually enabled.
+        if logger.get_effective_level() > LoggingSeverity.DEBUG:
+            return
+        logger.debug(self.status_interpreter(msg))
 
     def status_interpreter(self, status):
         """Generates a string according to the current value of the status variables."""
@@ -49,3 +54,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
