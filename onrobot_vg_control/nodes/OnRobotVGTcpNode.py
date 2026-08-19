@@ -41,7 +41,7 @@ class OnRobotVGTcp(Node):
 
             # Send the most recent command
         if not self.prev_msg == self.gripper.message:  # find new message
-            self.get_logger().info("Sending message.")
+            self.get_logger().debug("Sending message.")
             self.gripper.send_command()
 
 
