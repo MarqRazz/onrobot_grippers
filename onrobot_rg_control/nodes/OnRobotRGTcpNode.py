@@ -23,7 +23,7 @@ class OnRobotRGTcpNode(OnRobotBaseRG):
         self.prev_msg = []
 
         # the communication lib needs access to the node's logger
-        self.logger = self.get_logger()
+        self.client.logger = self.get_logger()
 
         # Connects to the ip address received as an argument
         if not self.client.connectToDevice(self.ip, self.port, self.changer_addr):
@@ -51,31 +51,52 @@ class OnRobotRGTcpNode(OnRobotBaseRG):
             10)
 
 
-    def restartPowerCycle(self, request):
+    def restartPowerCycle(self, request, response):
         self.get_logger().info("Restarting the power cycle of all grippers connected.")
-        self.gripper.restartPowerCycle()
-        #rospy.sleep(1)
-        return Trigger.Response(
-            success=None,  # TODO: implement
-            message=None)  # TODO: implement
+        # Called on the client directly: this method shadows the one the base
+        # class provides, so going through self would recurse into the service.
+        response.success = bool(self.client.restartPowerCycle())
+        response.message = ("Power cycle restarted." if response.success
+                            else "Restarting the power cycle failed.")
+        return response
 
 
     def timer_callback(self):
-        status = self.getStatus()
-        self.pub.publish(status)
+        # Nothing may escape this callback: an exception here stops the timer
+        # and takes the node down with it.
+        try:
+            status = self.getStatus()
+            if status is None:
+                # Publish nothing rather than a made up status: consumers of
+                # OnRobotRGInput are expected to fail closed when it goes stale.
+                return
+            self.pub.publish(status)
 
-        # Send the most recent command
-        if not int(format(status.g_sta, '016b')[-1]):  # not busy
-            if not self.prev_msg == self.message:       # find new message
-                self.get_logger().info(self.get_name()+": Sending message.")
-                self.sendCommand()
-        self.prev_msg = self.message
+            # Send the most recent command
+            if not int(format(status.g_sta, '016b')[-1]):  # not busy
+                if not self.prev_msg == self.message:       # find new message
+                    self.get_logger().info(self.get_name()+": Sending message.")
+                    if self.sendCommand():
+                        # Only advance once the write has actually reached the
+                        # device, so that a failed write is retried on the next
+                        # tick instead of being dropped.
+                        self.prev_msg = list(self.message)
+        except Exception as e:
+            self.get_logger().error(
+                f"Unhandled error in the timer callback: {e}",
+                throttle_duration_sec=5.0)
 
 def main(args=None):
     rclpy.init(args=args)
     node = OnRobotRGTcpNode()
-    rclpy.spin(node)
-    rclpy.shutdown()
+
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

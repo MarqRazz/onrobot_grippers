@@ -68,22 +68,29 @@ class OnRobotBaseRG(Node):
         self.message.append(command.r_ctr)
 
     def sendCommand(self):
-        """Sends the command to the Gripper."""
+        """Sends the command to the Gripper.
+            Returns True if the command reached the device.
+        """
 
-        self.client.sendCommand(self.message)
+        return self.client.sendCommand(self.message)
 
     def restartPowerCycle(self):
-        """Restarts the power cycle of the Gripper."""
+        """Restarts the power cycle of the Gripper.
+            Returns True if the request reached the device.
+        """
 
-        self.client.restartPowerCycle()
+        return self.client.restartPowerCycle()
 
     def getStatus(self):
         """Requests the status from the gripper and
             return it in the OnRobotRGInput msg type.
+            Returns None if the gripper status could not be read.
         """
 
         # Acquire status from the Gripper
         status = self.client.getStatus()
+        if status is None:
+            return None
 
         # Message to output
         message = OnRobotRGInput()

@@ -34,6 +34,8 @@ def generate_launch_description():
     package='onrobot_rg_control',
     namespace=namespace,
     executable='OnRobotRGTcpNode.py',
+    respawn=True,
+    respawn_delay=2.0,
     parameters=[{
       'ip' : ip,
       'port' : port,

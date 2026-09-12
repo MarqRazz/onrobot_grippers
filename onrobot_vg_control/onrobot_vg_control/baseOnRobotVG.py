@@ -55,9 +55,11 @@ class OnRobotBaseVG(Node):
         self.message = [command.r_mca, command.r_vca, command.r_mcb, command.r_vcb]
 
     def send_command(self):
-        """Sends the command to the Gripper."""
+        """Sends the command to the Gripper.
+        Returns True if the command reached the device.
+        """
 
-        self.client.send_command(self.message)
+        return self.client.send_command(self.message)
 
     def get_status(self):
         """Requests the status from the gripper and

@@ -50,7 +50,11 @@ class OnRobotVGTcp(Node):
             # Send the most recent command
             if not self.prev_msg == self.gripper.message:  # find new message
                 self.get_logger().debug("Sending message.")
-                self.gripper.send_command()
+                if self.gripper.send_command():
+                    # Only advance once the write has actually reached the
+                    # device, so that a failed write is retried on the next
+                    # tick instead of being dropped.
+                    self.prev_msg = list(self.gripper.message)
         except Exception as e:
             self.get_logger().error(
                 f"Unhandled error in the main loop: {e}",
