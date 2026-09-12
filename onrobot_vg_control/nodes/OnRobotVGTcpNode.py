@@ -63,8 +63,9 @@ class OnRobotVGTcp(Node):
 
 def main(args=None):
     rclpy.init(args=args)
+    node = OnRobotVGTcp()
+
     try:
-        node = OnRobotVGTcp()
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
