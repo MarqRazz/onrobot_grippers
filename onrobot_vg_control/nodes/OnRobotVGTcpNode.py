@@ -34,15 +34,27 @@ class OnRobotVGTcp(Node):
 
         self.prev_msg = []
         self.timer = self.create_timer(0.1, self.main_loop)
+
     def main_loop(self):
-        # Get and publish the Gripper status
-        status = self.gripper.get_status()
-        self.pub.publish(status)
+        # Nothing may escape this callback: an exception here stops the timer
+        # and takes the node down with it.
+        try:
+            # Get and publish the Gripper status
+            status = self.gripper.get_status()
+            if status is None:
+                # Publish nothing rather than a made up status: consumers of
+                # OnRobotVGInput are expected to fail closed when it goes stale.
+                return
+            self.pub.publish(status)
 
             # Send the most recent command
-        if not self.prev_msg == self.gripper.message:  # find new message
-            self.get_logger().debug("Sending message.")
-            self.gripper.send_command()
+            if not self.prev_msg == self.gripper.message:  # find new message
+                self.get_logger().debug("Sending message.")
+                self.gripper.send_command()
+        except Exception as e:
+            self.get_logger().error(
+                f"Unhandled error in the main loop: {e}",
+                throttle_duration_sec=5.0)
 
 
 def main(args=None):

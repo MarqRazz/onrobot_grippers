@@ -62,10 +62,13 @@ class OnRobotBaseVG(Node):
     def get_status(self):
         """Requests the status from the gripper and
         return it in the OnRobotVGInput msg type.
+        Returns None if the gripper status could not be read.
         """
 
         # Acquire status from the Gripper
         status = self.client.get_status()
+        if status is None:
+            return None
 
         # Message to output
         message = OnRobotVGInput()

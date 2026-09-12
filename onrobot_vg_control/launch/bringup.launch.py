@@ -45,6 +45,8 @@ def generate_launch_description():
         executable='OnRobotVGTcpNode.py',
         name='OnRobotVGTcpNode',
         output='screen',
+        respawn=True,
+        respawn_delay=2.0,
         parameters=[{
             'onrobot.ip': LaunchConfiguration('ip'),
             'onrobot.port': LaunchConfiguration('port'),
