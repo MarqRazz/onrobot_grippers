@@ -47,13 +47,15 @@ class OnRobotVGTcp(Node):
 
 def main(args=None):
     rclpy.init(args=args)
+    node = None
     try:
         node = OnRobotVGTcp()
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
     finally:
-        node.destroy_node()
+        if node is not None:
+            node.destroy_node()
         rclpy.shutdown()
 
 

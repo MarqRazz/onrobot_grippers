@@ -30,10 +30,6 @@ class Communication(Node):
         self.client = ModbusTcpClient(
             ip,
             port=port,
-            stopbits=1,
-            bytesize=8,
-            parity='E',
-            baudrate=115200,
             timeout=1)
         self.changer_addr = changer_addr
         self.client.connect()
@@ -94,3 +90,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
