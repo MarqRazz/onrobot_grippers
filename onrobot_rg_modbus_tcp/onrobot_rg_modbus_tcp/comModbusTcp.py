@@ -34,10 +34,6 @@ class communication:
         self.client = ModbusTcpClient(
             host=ip,
             port=port,
-            stopbits=1,
-            bytesize=8,
-            parity='E',
-            baudrate=115200,
             timeout=1)
         self.changer_addr = changer_addr
         return self.client.connect()
