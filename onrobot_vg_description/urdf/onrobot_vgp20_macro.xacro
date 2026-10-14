@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!-- OnRobot VGP20 vacuum gripper, split so its cups can be swapped:
+
+       ${prefix}vgp20_base_link   the body, origin on the robot flange (tool0),
+                                  z out of the flange
+       ${prefix}vgp20_cup_mount   the body's cup face, centred on the cup grid
+       ${prefix}suction           the cups, origin at the cup lips' centre, z out
+                                  (the TCP; same convention as the VGC10's)
+
+     onrobot_vgp20 = onrobot_vgp20_base + onrobot_vgp20_16cups. Another cup set
+     is another macro that hangs its own ${prefix}suction off vgp20_cup_mount.
+
+     Meshes simplified (1 mm) from the OnRobot CAD of the gripper as fitted in
+     the KUKA AMP test cell. Collision is boxes. Mass 2.55 kg (datasheet), split
+     2.35 kg body / 0.2 kg cups (nominal); inertia as solid boxes. -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="onrobot_vgp20_base" params="prefix">
+    <link name="${prefix}vgp20_base_link">
+      <inertial>
+        <origin xyz="0 0.036 0.0255" rpy="0 0 0" />
+        <mass value="2.35" />
+        <inertia ixx="0.01475" ixy="0" ixz="0" iyy="0.007732" iyz="0" izz="0.02028" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://onrobot_vg_description/meshes/vgp20/visual/vgp20_base.obj" />
+        </geometry>
+      </visual>
+      <collision name="quick_changer">
+        <origin xyz="0 0 -0.005" rpy="0 0 0" />
+        <geometry>
+          <box size="0.072 0.072 0.014" />
+        </geometry>
+      </collision>
+      <collision name="body">
+        <origin xyz="0 0.036 0.032" rpy="0 0 0" />
+        <geometry>
+          <box size="0.184 0.264 0.062" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}vgp20_cup_mount" />
+    <joint name="${prefix}vgp20_cup_mount_joint" type="fixed">
+      <origin xyz="0 0.036 0.063" rpy="0 0 0" />
+      <parent link="${prefix}vgp20_base_link" />
+      <child link="${prefix}vgp20_cup_mount" />
+    </joint>
+  </xacro:macro>
+
+  <!-- 16 cups, 4 x 4 at 48 x 74.5 mm pitch, lips 29 mm above the cup face. -->
+  <xacro:macro name="onrobot_vgp20_16cups" params="prefix parent:=''">
+    <link name="${prefix}suction">
+      <inertial>
+        <origin xyz="0 0 -0.0174" rpy="0 0 0" />
+        <mass value="0.2" />
+        <inertia ixx="0.001182" ixy="0" ixz="0" iyy="0.0005843" iyz="0" izz="0.001726" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://onrobot_vg_description/meshes/vgp20/visual/vgp20_16cups.obj" />
+        </geometry>
+      </visual>
+      <collision name="cups">
+        <origin xyz="0 0 -0.0145" rpy="0 0 0" />
+        <geometry>
+          <box size="0.184 0.264 0.029" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}suction_joint" type="fixed">
+      <origin xyz="0 0 0.029" rpy="0 0 0" />
+      <parent link="${parent if parent else prefix + 'vgp20_cup_mount'}" />
+      <child link="${prefix}suction" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="onrobot_vgp20" params="prefix">
+    <xacro:onrobot_vgp20_base prefix="${prefix}" />
+    <xacro:onrobot_vgp20_16cups prefix="${prefix}" />
+  </xacro:macro>
+</robot>
