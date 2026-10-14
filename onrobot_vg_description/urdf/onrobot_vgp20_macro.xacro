@@ -11,14 +11,16 @@
      is another macro that hangs its own ${prefix}suction off vgp20_cup_mount.
 
      Meshes simplified (1 mm) from the OnRobot CAD of the gripper as fitted in
-     the KUKA AMP test cell. Collision is boxes. Mass 2.55 kg (datasheet), split
-     2.35 kg body / 0.2 kg cups (nominal); inertia as solid boxes. -->
+     the KUKA AMP test cell, in that cell's tool0 (its CAD's A6 frame turned
+     180 deg about z, measured by fitting the arm's URDF to the CAD).
+     Collision is boxes. Mass 2.55 kg (datasheet), split 2.35 kg body / 0.2 kg
+     cups (nominal); inertia as solid boxes. -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="onrobot_vgp20_base" params="prefix">
     <link name="${prefix}vgp20_base_link">
       <inertial>
-        <origin xyz="0 0.036 0.0255" rpy="0 0 0" />
+        <origin xyz="0 -0.036 0.0255" rpy="0 0 0" />
         <mass value="2.35" />
         <inertia ixx="0.01475" ixy="0" ixz="0" iyy="0.007732" iyz="0" izz="0.02028" />
       </inertial>
@@ -35,7 +37,7 @@
         </geometry>
       </collision>
       <collision name="body">
-        <origin xyz="0 0.036 0.032" rpy="0 0 0" />
+        <origin xyz="0 -0.036 0.032" rpy="0 0 0" />
         <geometry>
           <box size="0.184 0.264 0.062" />
         </geometry>
@@ -44,7 +46,7 @@
 
     <link name="${prefix}vgp20_cup_mount" />
     <joint name="${prefix}vgp20_cup_mount_joint" type="fixed">
-      <origin xyz="0 0.036 0.063" rpy="0 0 0" />
+      <origin xyz="0 -0.036 0.063" rpy="0 0 0" />
       <parent link="${prefix}vgp20_base_link" />
       <child link="${prefix}vgp20_cup_mount" />
     </joint>
